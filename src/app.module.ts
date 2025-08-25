@@ -20,28 +20,42 @@ import { ReportsModule } from './reports/reports.module';
       load: [databaseConfig, jwtConfig],
       envFilePath: ['.env', '.env.local', '.env.example'],
     }),
-   TypeOrmModule.forRootAsync({
-  imports: [ConfigModule],
-  useFactory: (configService: ConfigService) => ({
-    type: 'postgres',
-    host: configService.get<string>('database.host'),
-    port: configService.get<number>('database.port'),
-    username: configService.get<string>('database.username'),
-    password: configService.get<string>('database.password'),
-    database: configService.get<string>('database.database'),
-    schema: configService.get<string>('database.schema'),
-    entities: [__dirname + '/**/*.entity{.ts,.js}'],
-    synchronize: configService.get<boolean>('database.synchronize'),
-    logging: configService.get<boolean>('database.logging'),
-    ssl: configService.get('database.ssl') || undefined,
-  }),
-  inject: [ConfigService],
-}),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        // ✅ If Render DATABASE_URL exists, prefer that
+        if (process.env.DATABASE_URL) {
+          return {
+            type: 'postgres',
+            url: process.env.DATABASE_URL,
+            ssl: { rejectUnauthorized: false },
+            autoLoadEntities: true,
+            synchronize: configService.get<boolean>('database.synchronize'),
+            logging: configService.get<boolean>('database.logging'),
+          };
+        }
+
+        // ✅ Otherwise use local .env values
+        return {
+          type: 'postgres',
+          host: configService.get<string>('database.host'),
+          port: configService.get<number>('database.port'),
+          username: configService.get<string>('database.username'),
+          password: configService.get<string>('database.password'),
+          database: configService.get<string>('database.database'),
+          schema: configService.get<string>('database.schema'),
+          autoLoadEntities: true,
+          synchronize: configService.get<boolean>('database.synchronize'),
+          logging: configService.get<boolean>('database.logging'),
+        };
+      },
+    }),
     AuthModule,
     ConservationModule,
     MailModule,
     OtpModule,
-    SocioEconomicModule, 
+    SocioEconomicModule,
     ProfileModule,
     ReportsModule,
   ],
