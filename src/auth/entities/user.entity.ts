@@ -15,6 +15,9 @@ export class User {
   password: string;
 
   @Column({ nullable: true })
+  name?: string;
+
+  @Column({ nullable: true })
   firstName?: string;
 
   @Column({ nullable: true })
@@ -37,6 +40,14 @@ export class User {
   @Column({ type: 'timestamp', nullable: true })
   @Exclude()
   passwordResetExpires?: Date;
+
+  @Column({ nullable: true })
+  @Exclude()
+  otp?: string;
+
+  @Column({ type: 'timestamp', nullable: true })
+  @Exclude()
+  otpExpiry?: Date;
 
   @CreateDateColumn()
   createdAt: Date;

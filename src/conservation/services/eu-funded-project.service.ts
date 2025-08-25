@@ -76,7 +76,7 @@ export class EUFundedProjectService {
   async getStatistics(): Promise<any> {
     const [total, totalTrees, totalBeneficiaries] = await Promise.all([
       this.euFundedProjectRepository.count(),
-      this.euFundedProjectRepository.sum('numberOfTreesPlanted'),
+      this.euFundedProjectRepository.sum('numberOfTrees'),
       this.euFundedProjectRepository.sum('currentBeneficiaries'),
     ]);
 

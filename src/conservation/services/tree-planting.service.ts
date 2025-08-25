@@ -82,14 +82,14 @@ export class TreePlantingService {
       .select('SUM(numberOfTrees)', 'totalTrees')
       .getRawOne();
     
-    const totalArea = await this.treePlantingRepository
+    const totalBeneficiaries = await this.treePlantingRepository
       .createQueryBuilder('tree')
-      .select('SUM(area)', 'totalArea')
+      .select('SUM(currentBeneficiaries)', 'totalBeneficiaries')
       .getRawOne();
     
     return {
       totalTrees: parseInt(totalTrees.totalTrees) || 0,
-      totalArea: parseFloat(totalArea.totalArea) || 0,
+      totalBeneficiaries: parseInt(totalBeneficiaries.totalBeneficiaries) || 0,
     };
   }
 }

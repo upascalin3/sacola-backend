@@ -4,38 +4,22 @@ import { ApiProperty } from '@nestjs/swagger';
 @Entity('buffalo_walls')
 export class BuffaloWall {
   @PrimaryGeneratedColumn('uuid')
-  @ApiProperty()
+  @ApiProperty({ description: 'Unique identifier of the buffalo wall repair' })
   id: string;
 
-  @Column()
-  @ApiProperty()
-  location: string;
-
-  @Column()
-  @ApiProperty()
-  distanceCovered: number;
-
   @Column({ type: 'date' })
-  @ApiProperty()
-  dateBuilt: Date;
+  @ApiProperty({ description: 'Date when the buffalo wall was repaired' })
+  dateRepaired: Date;
 
   @Column()
-  @ApiProperty()
-  targetBeneficiaries: number;
-
-  @Column()
-  @ApiProperty()
-  currentBeneficiaries: number;
-
-  @Column({ nullable: true })
-  @ApiProperty({ required: false })
-  description: string;
+  @ApiProperty({ description: 'Cost of the buffalo wall repair' })
+  cost: number;
 
   @CreateDateColumn()
-  @ApiProperty()
+  @ApiProperty({ description: 'Timestamp when the record was created' })
   createdAt: Date;
 
   @UpdateDateColumn()
-  @ApiProperty()
+  @ApiProperty({ description: 'Timestamp when the record was last updated' })
   updatedAt: Date;
 }

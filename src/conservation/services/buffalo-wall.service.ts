@@ -29,16 +29,15 @@ export class BuffaloWallService {
     const skip = (page - 1) * limit;
     const where: any = {};
 
-    if (location) where.location = location;
     if (startDate && endDate) {
-      where.dateBuilt = Between(new Date(startDate), new Date(endDate));
+      where.dateRepaired = Between(new Date(startDate), new Date(endDate));
     }
 
     const [items, total] = await this.buffaloWallRepository.findAndCount({
       where,
       skip,
       take: limit,
-      order: { dateBuilt: 'DESC' },
+      order: { dateRepaired: 'DESC' },
     });
 
     return new PaginationDto({
@@ -78,14 +77,14 @@ export class BuffaloWallService {
 
   async getStatistics() {
     const totalWalls = await this.buffaloWallRepository.count();
-    const totalLength = await this.buffaloWallRepository
+    const totalCost = await this.buffaloWallRepository
       .createQueryBuilder('buffaloWall')
-      .select('SUM(length)', 'totalLength')
+      .select('SUM(cost)', 'totalCost')
       .getRawOne();
     
     return {
       totalWalls,
-      totalLength: parseFloat(totalLength.totalLength) || 0,
+      totalCost: parseFloat(totalCost.totalCost) || 0,
     };
   }
 }

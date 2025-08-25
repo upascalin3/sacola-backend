@@ -6,9 +6,9 @@ import { ApiTags, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { PaginationDto } from '../dto/pagination.dto';
 import { TreePlanting } from '../entities/tree-planting.entity';
 
-@ApiTags('conservation/tree-plantings')
+@ApiTags('conservation')
 @ApiBearerAuth()
-@Controller('api/conservation/tree-plantings')
+@Controller('api/conservation/tree-planting')
 export class TreePlantingController {
   constructor(private readonly treePlantingService: TreePlantingService) {}
 

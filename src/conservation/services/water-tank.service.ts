@@ -1,9 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindManyOptions, Like } from 'typeorm';
-import { WaterTank, WaterTankStatus } from '../entities/water-tank.entity';
+import { Repository, Between } from 'typeorm';
+import { WaterTank } from '../entities/water-tank.entity';
 import { CreateWaterTankDto } from '../dto/create-water-tank.dto';
-import { UpdateWaterTankDto } from '../dto/update-water-tank.dto';
 import { PaginationDto } from '../dto/pagination.dto';
 
 @Injectable()
@@ -18,44 +17,42 @@ export class WaterTankService {
     return this.waterTankRepository.save(waterTank);
   }
 
-  async findAll(paginationDto: PaginationDto<WaterTank>) {
-    const { page = 1, limit = 10, sortBy, sortOrder = 'DESC', ...filters } = paginationDto;
+  async findAll(query: Partial<PaginationDto<WaterTank>>): Promise<PaginationDto<WaterTank>> {
+    const { 
+      page = 1, 
+      limit = 10, 
+      location, 
+      startDate, 
+      endDate 
+    } = query;
     
+    const skip = (page - 1) * limit;
     const where: any = {};
-    
-    // Apply filters
-    if (filters) {
-      Object.entries(filters).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          if (typeof value === 'string') {
-            where[key] = Like(`%${value}%`);
-          } else {
-            where[key] = value;
-          }
-        }
-      });
+
+    if (location) where.location = location;
+    if (startDate && endDate) {
+      where.dateDonated = Between(new Date(startDate), new Date(endDate));
     }
 
     const [items, total] = await this.waterTankRepository.findAndCount({
       where,
-      order: sortBy ? { [sortBy]: sortOrder } : { createdAt: 'DESC' },
-      skip: (page - 1) * limit,
+      skip,
       take: limit,
-      relations: ['project'],
+      order: { dateDonated: 'DESC' },
     });
 
-    return {
+    return new PaginationDto({
       items,
       total,
       page,
+      limit,
       totalPages: Math.ceil(total / limit),
-    };
+    });
   }
 
   async findOne(id: string): Promise<WaterTank> {
     const waterTank = await this.waterTankRepository.findOne({ 
-      where: { id },
-      relations: ['project'] 
+      where: { id }
     });
     
     if (!waterTank) {
@@ -65,15 +62,12 @@ export class WaterTankService {
     return waterTank;
   }
 
-  async update(id: string, updateWaterTankDto: UpdateWaterTankDto): Promise<WaterTank> {
+  async update(
+    id: string,
+    updateWaterTankDto: Partial<CreateWaterTankDto>,
+  ): Promise<WaterTank> {
     const waterTank = await this.findOne(id);
-    
     Object.assign(waterTank, updateWaterTankDto);
-    
-    if (updateWaterTankDto.status === WaterTankStatus.MAINTENANCE_COMPLETED) {
-      waterTank.lastMaintenanceDate = new Date();
-    }
-    
     return this.waterTankRepository.save(waterTank);
   }
 
@@ -85,53 +79,20 @@ export class WaterTankService {
     }
   }
 
-  async findByProjectId(projectId: string, paginationDto: PaginationDto<WaterTank>) {
-    const pagination = new PaginationDto<WaterTank>({
-      ...paginationDto,
-      projectId,
-    });
-    return this.findAll(pagination);
-  }
-
-  async requestMaintenance(id: string): Promise<WaterTank> {
-    const waterTank = await this.findOne(id);
-    waterTank.status = WaterTankStatus.NEEDS_MAINTENANCE;
-    return this.waterTankRepository.save(waterTank);
-  }
-
-  async completeMaintenance(id: string): Promise<WaterTank> {
-    const waterTank = await this.findOne(id);
-    waterTank.status = WaterTankStatus.MAINTENANCE_COMPLETED;
-    waterTank.lastMaintenanceDate = new Date();
-    return this.waterTankRepository.save(waterTank);
-  }
-
-  async getWaterTankStats() {
-    const total = await this.waterTankRepository.count();
-    const byStatus = await this.waterTankRepository
-      .createQueryBuilder('waterTank')
-      .select('waterTank.status', 'status')
-      .addSelect('COUNT(waterTank.id)', 'count')
-      .groupBy('waterTank.status')
-      .getRawMany();
-
-    const byType = await this.waterTankRepository
-      .createQueryBuilder('waterTank')
-      .select('waterTank.type', 'type')
-      .addSelect('COUNT(waterTank.id)', 'count')
-      .groupBy('waterTank.type')
-      .getRawMany();
-
+  async getStatistics() {
+    const totalTanks = await this.waterTankRepository
+      .createQueryBuilder('tank')
+      .select('SUM(numberOfTanks)', 'totalTanks')
+      .getRawOne();
+    
+    const totalBeneficiaries = await this.waterTankRepository
+      .createQueryBuilder('tank')
+      .select('SUM(currentBeneficiaries)', 'totalBeneficiaries')
+      .getRawOne();
+    
     return {
-      total,
-      byStatus: byStatus.reduce((acc, { status, count }) => ({
-        ...acc,
-        [status]: parseInt(count, 10),
-      }), {}),
-      byType: byType.reduce((acc, { type, count }) => ({
-        ...acc,
-        [type]: parseInt(count, 10),
-      }), {}),
+      totalTanks: parseInt(totalTanks.totalTanks) || 0,
+      totalBeneficiaries: parseInt(totalBeneficiaries.totalBeneficiaries) || 0,
     };
   }
 }

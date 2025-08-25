@@ -4,42 +4,42 @@ import { ApiProperty } from '@nestjs/swagger';
 @Entity('tree_planting')
 export class TreePlanting {
   @PrimaryGeneratedColumn('uuid')
-  @ApiProperty()
+  @ApiProperty({ description: 'Unique identifier of the tree planting entry' })
   id: string;
 
   @Column()
-  @ApiProperty()
+  @ApiProperty({ description: 'Type of trees planted' })
   treeType: string;
 
   @Column()
-  @ApiProperty()
+  @ApiProperty({ description: 'Location where trees were planted' })
   location: string;
 
   @Column()
-  @ApiProperty()
-  numberOfTreesPlanted: number;
+  @ApiProperty({ description: 'Number of trees planted' })
+  numberOfTrees: number;
 
   @Column({ type: 'date' })
-  @ApiProperty()
+  @ApiProperty({ description: 'Date when trees were planted' })
   datePlanted: Date;
 
+  @Column({ nullable: true })
+  @ApiProperty({ description: 'Description of the tree planting project', required: false })
+  description: string;
+
   @Column()
-  @ApiProperty()
+  @ApiProperty({ description: 'Target number of beneficiaries' })
   targetBeneficiaries: number;
 
   @Column()
-  @ApiProperty()
+  @ApiProperty({ description: 'Current number of beneficiaries' })
   currentBeneficiaries: number;
 
-  @Column({ nullable: true })
-  @ApiProperty({ required: false })
-  description: string;
-
   @CreateDateColumn()
-  @ApiProperty()
+  @ApiProperty({ description: 'Timestamp when the record was created' })
   createdAt: Date;
 
   @UpdateDateColumn()
-  @ApiProperty()
+  @ApiProperty({ description: 'Timestamp when the record was last updated' })
   updatedAt: Date;
 }

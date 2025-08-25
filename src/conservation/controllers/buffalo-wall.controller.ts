@@ -6,9 +6,9 @@ import { ApiTags, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { PaginationDto } from '../dto/pagination.dto';
 import { BuffaloWall } from '../entities/buffalo-wall.entity';
 
-@ApiTags('conservation/buffalo-walls')
+@ApiTags('conservation')
 @ApiBearerAuth()
-@Controller('api/conservation/buffalo-walls')
+@Controller('api/conservation/buffalo-wall')
 export class BuffaloWallController {
   constructor(private readonly buffaloWallService: BuffaloWallService) {}
 

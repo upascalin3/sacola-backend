@@ -1,6 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { WaterTank } from './water-tank.entity';
 
 @Entity('conservation_projects')
 export class ConservationProject {
@@ -56,14 +55,7 @@ export class ConservationProject {
   @ApiProperty({ description: 'Additional notes about the project', required: false })
   notes?: string;
 
-  @OneToMany(() => WaterTank, waterTank => waterTank.project, { cascade: true })
-  @ApiProperty({ 
-    description: 'List of water tanks associated with this project',
-    type: () => WaterTank,
-    isArray: true,
-    required: false
-  })
-  waterTanks: WaterTank[];
+
 
   @CreateDateColumn()
   @ApiProperty({ description: 'Creation date' })

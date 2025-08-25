@@ -6,9 +6,9 @@ import { ApiTags, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { PaginationDto } from '../dto/pagination.dto';
 import { EUFundedProject } from '../entities/eu-funded-project.entity';
 
-@ApiTags('conservation/eu-funded-projects')
+@ApiTags('conservation')
 @ApiBearerAuth()
-@Controller('api/conservation/eu-funded-projects')
+@Controller('api/conservation/eu-projects')
 export class EUFundedProjectController {
   constructor(private readonly euFundedProjectService: EUFundedProjectService) {}
 
