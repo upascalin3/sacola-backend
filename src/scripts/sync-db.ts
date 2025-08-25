@@ -9,34 +9,31 @@ async function syncDatabase() {
 
   console.log('Starting database synchronization...');
   console.log('NODE_ENV:', process.env.NODE_ENV);
-  console.log('Database:', process.env.DB_DATABASE);
 
-  // Create a new connection
+  // Use DATABASE_URL if available, otherwise fall back to separate vars
   const AppDataSource = new DataSource({
     type: 'postgres',
-    host: process.env.DB_HOST || 'localhost',
-    port: parseInt(process.env.DB_PORT || '5432', 10),
-    username: process.env.DB_USERNAME || 'postgres',
-    password: process.env.DB_PASSWORD || 'root',
-    database: process.env.DB_DATABASE || 'sacola',
+    url: process.env.DATABASE_URL, // Render connection string
+    host: process.env.DB_HOST,     // fallback for local
+    port: process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : undefined,
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
     schema: process.env.DB_SCHEMA || 'public',
     entities: [User],
-    synchronize: true, // This will create tables if they don't exist
+    synchronize: true, // ⚠️ safe for dev, not for prod
     logging: true,
   });
 
   try {
-    // Initialize the connection
     const connection = await AppDataSource.initialize();
     console.log('Database connection established successfully!');
 
-    // Synchronize all entities
     console.log('Synchronizing database...');
-    await connection.synchronize(false); // false = don't drop existing tables
+    await connection.synchronize(false); // false = don't drop tables
     
     console.log('Database synchronized successfully!');
     
-    // Close the connection
     await connection.destroy();
     console.log('Connection closed.');
     
@@ -47,5 +44,4 @@ async function syncDatabase() {
   }
 }
 
-// Run the sync
 syncDatabase();
