@@ -29,6 +29,7 @@ export class OtpService {
     const otpEntity = this.otpRepository.create({
       email,
       code: otp,
+      isUsed: false,
       expiresAt,
     });
 
