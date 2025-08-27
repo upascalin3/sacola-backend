@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsOptional, IsString, Min } from 'class-validator';
-import { TransformDateNotFuture } from '../../common/transformers/date.transformer';
+import { IsInt, IsOptional, IsString, Min, Matches } from 'class-validator';
 
 export class CreateLivestockDto {
   @ApiProperty()
@@ -36,9 +35,15 @@ export class CreateLivestockDto {
   @Min(0)
   currentlyOwned: number;
 
-  @ApiProperty()
-  @TransformDateNotFuture()
-  dateDonated: Date;
+  @ApiProperty({ 
+    description: 'Date donated (YYYY-MM-DD format)',
+    example: '2024-01-15',
+    format: 'date',
+    type: String
+  })
+  @IsString()
+  @Matches(/^\d{4}-\d{2}-\d{2}$/)
+  dateDonated: string;
 
   @ApiProperty()
   @IsInt()

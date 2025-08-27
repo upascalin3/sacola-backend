@@ -27,9 +27,9 @@ export class ITTrainingEntryData {
   @ApiProperty({ description: 'Training duration in days', required: false })
   trainingDuration?: number;
 
-  @Column({ type: 'date' })
-  @ApiProperty({ description: 'Date of the training' })
-  date: Date;
+  @Column({ type: 'varchar', length: 10 })
+  @ApiProperty({ description: 'Date of the training (YYYY-MM-DD)' })
+  date: string;
 
   @Column({ type: 'text', nullable: true })
   @ApiProperty({ description: 'Description', required: false })

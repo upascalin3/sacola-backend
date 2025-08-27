@@ -1,11 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
-import { TransformDateNotFuture } from '../../common/transformers/date.transformer';
+import { IsOptional, IsString, Matches } from 'class-validator';
 
 export class CreateSportsDto {
   @ApiProperty()
   @IsString()
-  name: string;
+  sportName: string;
 
   @ApiProperty()
   @IsString()
@@ -15,9 +14,15 @@ export class CreateSportsDto {
   @IsString()
   condition: string;
 
-  @ApiProperty()
-  @TransformDateNotFuture()
-  dateBuilt: Date;
+  @ApiProperty({ 
+    description: 'Date built (YYYY-MM-DD format)',
+    example: '2024-01-15',
+    format: 'date',
+    type: String
+  })
+  @IsString()
+  @Matches(/^\d{4}-\d{2}-\d{2}$/)
+  dateBuilt: string;
 
   @ApiProperty({ required: false })
   @IsOptional()

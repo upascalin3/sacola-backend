@@ -15,9 +15,9 @@ export class HealthCentresEntryData {
   @ApiProperty({ description: 'Location' })
   location: string;
 
-  @Column({ type: 'date' })
-  @ApiProperty({ description: 'Date built' })
-  dateBuilt: Date;
+  @Column({ type: 'varchar', length: 10 })
+  @ApiProperty({ description: 'Date built (YYYY-MM-DD)' })
+  dateBuilt: string;
 
   @Column({ type: 'text', nullable: true })
   @ApiProperty({ description: 'Description', required: false })

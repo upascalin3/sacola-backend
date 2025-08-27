@@ -35,9 +35,9 @@ export class LivestockEntryData {
   @ApiProperty({ description: 'Currently owned number' })
   currentlyOwned: number;
 
-  @Column({ type: 'date' })
-  @ApiProperty({ description: 'Date donated' })
-  dateDonated: Date;
+  @Column({ type: 'varchar', length: 10 })
+  @ApiProperty({ description: 'Date donated (YYYY-MM-DD)' })
+  dateDonated: string;
 
   @Column({ type: 'int' })
   @ApiProperty({ description: 'Target number of beneficiaries' })
