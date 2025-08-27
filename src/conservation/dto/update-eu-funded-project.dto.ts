@@ -1,7 +1,8 @@
 import { PartialType } from '@nestjs/swagger';
-import { IsString, IsDateString, IsOptional, IsNumber, IsEnum, IsUUID, IsDate } from 'class-validator';
+import { IsString, IsOptional, IsNumber, IsEnum, IsUUID } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { CreateEUFundedProjectDto } from './create-eu-funded-project.dto';
+import { TransformDate } from '../../common/transformers/date.transformer';
 
 export class UpdateEUFundedProjectDto extends PartialType(CreateEUFundedProjectDto) {
   @ApiPropertyOptional({ description: 'Name of the EU funded project', example: 'Updated Project Name' })
@@ -19,7 +20,7 @@ export class UpdateEUFundedProjectDto extends PartialType(CreateEUFundedProjectD
     type: Date,
     example: '2024-01-01T00:00:00.000Z'
   })
-  @IsDate()
+  @TransformDate()
   @IsOptional()
   startDate?: Date;
 
@@ -28,7 +29,7 @@ export class UpdateEUFundedProjectDto extends PartialType(CreateEUFundedProjectD
     type: Date,
     example: '2024-12-31T00:00:00.000Z'
   })
-  @IsDate()
+  @TransformDate()
   @IsOptional()
   endDate?: Date;
 

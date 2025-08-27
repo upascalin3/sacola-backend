@@ -1,5 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNumber, IsDate, IsOptional, IsArray, IsEnum } from 'class-validator';
+import { IsString, IsNumber, IsOptional, IsArray, IsEnum } from 'class-validator';
+import { Type } from 'class-transformer';
+import { TransformDate, TransformDateFuture } from '../../common/transformers/date.transformer';
 
 class ProjectActivityDto {
   @ApiProperty({ description: 'Name of the activity' })
@@ -16,17 +18,19 @@ class ProjectActivityDto {
 
   @ApiProperty({ 
     description: 'Start date of the activity',
-    type: Date 
+    type: Date,
+    example: '2024-01-15'
   })
-  @IsDate()
+  @TransformDate()
   startDate: Date;
 
   @ApiProperty({ 
     description: 'End date of the activity',
     type: Date,
+    example: '2024-01-15',
     required: false 
   })
-  @IsDate()
+  @TransformDate()
   @IsOptional()
   endDate?: Date;
 
@@ -61,7 +65,7 @@ export class CreateConservationProjectDto {
     description: 'Start date of the project',
     type: Date 
   })
-  @IsDate()
+  @TransformDate()
   startDate: Date;
 
   @ApiProperty({ 
@@ -69,7 +73,7 @@ export class CreateConservationProjectDto {
     type: Date,
     required: false 
   })
-  @IsDate()
+  @TransformDate()
   @IsOptional()
   endDate?: Date;
 

@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsEnum, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsString } from 'class-validator';
+import { TransformDate } from '../../common/transformers/date.transformer';
 
 export class GenerateReportDto {
   @ApiProperty({ enum: ['Conservation', 'Socio-Economic'] })
@@ -15,11 +16,11 @@ export class GenerateReportDto {
   reportType: 'Annual' | 'Monthly' | 'Custom';
 
   @ApiProperty()
-  @IsDateString()
+  @TransformDate()
   dateRangeStart: Date;
 
   @ApiProperty()
-  @IsDateString()
+  @TransformDate()
   dateRangeEnd: Date;
 }
 

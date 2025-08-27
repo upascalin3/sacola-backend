@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNumber, IsDate, IsOptional } from 'class-validator';
+import { IsString, IsNumber, IsOptional } from 'class-validator';
+import { TransformDateNotFuture } from '../../common/transformers/date.transformer';
 
 export class CreateWaterTankDto {
   @ApiProperty({ description: 'Type of water tank' })
@@ -15,7 +16,7 @@ export class CreateWaterTankDto {
   numberOfTanks: number;
 
   @ApiProperty({ description: 'Date when water tanks were donated' })
-  @IsDate()
+  @TransformDateNotFuture()
   dateDonated: Date;
 
   @ApiProperty({ description: 'Description of the water tank project', required: false })

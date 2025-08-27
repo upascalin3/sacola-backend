@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
+import { TransformDateNotFuture } from '../../common/transformers/date.transformer';
 
 export class CreateHouseDto {
   @ApiProperty()
@@ -15,7 +16,7 @@ export class CreateHouseDto {
   location: string;
 
   @ApiProperty()
-  @IsDateString()
+  @TransformDateNotFuture()
   dateBuilt: Date;
 
   @ApiProperty()
