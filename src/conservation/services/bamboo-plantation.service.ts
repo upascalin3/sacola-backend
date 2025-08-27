@@ -1,6 +1,6 @@
  import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DeepPartial } from 'typeorm';
 import { BambooPlantation } from '../entities/bamboo-plantation.entity';
 import { CreateBambooPlantationDto } from '../dto/create-bamboo-plantation.dto';
 import { PaginationDto } from '../dto/pagination.dto';
@@ -13,7 +13,8 @@ export class BambooPlantationService {
   ) {}
 
   async create(createBambooPlantationDto: CreateBambooPlantationDto): Promise<BambooPlantation> {
-    const bambooPlantation = this.bambooPlantationRepository.create(createBambooPlantationDto);
+    const partial = createBambooPlantationDto as unknown as DeepPartial<BambooPlantation>;
+    const bambooPlantation: BambooPlantation = this.bambooPlantationRepository.create(partial);
     return this.bambooPlantationRepository.save(bambooPlantation);
   }
 

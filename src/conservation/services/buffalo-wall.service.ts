@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Between } from 'typeorm';
+import { Repository, Between, DeepPartial } from 'typeorm';
 import { BuffaloWall } from '../entities/buffalo-wall.entity';
 import { CreateBuffaloWallDto } from '../dto/create-buffalo-wall.dto';
 import { PaginationDto } from '../dto/pagination.dto';
@@ -13,8 +13,9 @@ export class BuffaloWallService {
   ) {}
 
   async create(createBuffaloWallDto: CreateBuffaloWallDto): Promise<BuffaloWall> {
-    const buffaloWall = this.buffaloWallRepository.create(createBuffaloWallDto);
-    return this.buffaloWallRepository.save(buffaloWall);
+    const partial = createBuffaloWallDto as unknown as DeepPartial<BuffaloWall>;
+    const buffaloWall: BuffaloWall = this.buffaloWallRepository.create(partial);
+    return this.buffaloWallRepository.save(buffaloWall as BuffaloWall);
   }
 
   async findAll(query: Partial<PaginationDto<BuffaloWall>>): Promise<PaginationDto<BuffaloWall>> {
@@ -24,13 +25,13 @@ export class BuffaloWallService {
       location, 
       startDate, 
       endDate 
-    } = query;
+    } = query as any;
     
     const skip = (page - 1) * limit;
     const where: any = {};
 
     if (startDate && endDate) {
-      where.dateRepaired = Between(new Date(startDate), new Date(endDate));
+      where.dateRepaired = Between(startDate, endDate);
     }
 
     const [items, total] = await this.buffaloWallRepository.findAndCount({

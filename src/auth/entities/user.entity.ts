@@ -25,12 +25,11 @@ export class User {
 
   @Column({
     type: 'enum',
-    enum: UserRole,
-    default: UserRole.USER,
+    enum: UserRole
   })
   role: UserRole;
 
-  @Column({ default: false })
+  @Column()
   isEmailVerified: boolean;
 
   @Column({ nullable: true })

@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNumber, IsOptional } from 'class-validator';
+import { IsString, IsNumber, IsOptional, Matches } from 'class-validator';
 import { Type } from 'class-transformer';
-import { TransformDateNotFuture } from '../../common/transformers/date.transformer';
 
 export class CreateBambooPlantationDto {
   @ApiProperty({ description: 'Distance covered by the bamboo plantation' })
@@ -14,12 +13,11 @@ export class CreateBambooPlantationDto {
   location: string;
 
   @ApiProperty({ 
-    description: 'Date when bamboo was planted',
-    type: Date,
-    example: '2024-01-15'
+    description: 'Date when bamboo was planted (YYYY-MM-DD)'
   })
-  @TransformDateNotFuture()
-  datePlanted: Date;
+  @IsString()
+  @Matches(/^\d{4}-\d{2}-\d{2}$/)
+  datePlanted: string;
 
   @ApiProperty({ description: 'Description of the bamboo plantation project', required: false })
   @IsString()

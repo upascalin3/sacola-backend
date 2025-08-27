@@ -23,11 +23,11 @@ export class HousingVillagesEntryData {
   @ApiProperty({ description: 'Date built' })
   dateBuilt: Date;
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'int' })
   @ApiProperty({ description: 'Good condition houses' })
   goodCondition: number;
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'int' })
   @ApiProperty({ description: 'Bad condition houses' })
   badCondition: number;
 

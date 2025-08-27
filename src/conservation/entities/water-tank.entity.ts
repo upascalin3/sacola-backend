@@ -19,9 +19,9 @@ export class WaterTank {
   @ApiProperty({ description: 'Number of water tanks' })
   numberOfTanks: number;
 
-  @Column({ type: 'date' })
-  @ApiProperty({ description: 'Date when water tanks were donated' })
-  dateDonated: Date;
+  @Column({ type: 'varchar', length: 10 })
+  @ApiProperty({ description: 'Date when water tanks were donated (YYYY-MM-DD)' })
+  dateDonated: string;
 
   @Column({ nullable: true })
   @ApiProperty({ description: 'Description of the water tank project', required: false })

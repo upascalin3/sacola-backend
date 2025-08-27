@@ -7,9 +7,9 @@ export class BuffaloWall {
   @ApiProperty({ description: 'Unique identifier of the buffalo wall repair' })
   id: string;
 
-  @Column({ type: 'date' })
-  @ApiProperty({ description: 'Date when the buffalo wall was repaired' })
-  dateRepaired: Date;
+  @Column({ type: 'varchar', length: 10 })
+  @ApiProperty({ description: 'Date when the buffalo wall was repaired (YYYY-MM-DD)' })
+  dateRepaired: string;
 
   @Column()
   @ApiProperty({ description: 'Cost of the buffalo wall repair' })

@@ -26,7 +26,7 @@ export class Report {
   @Column()
   generatedBy: string;
 
-  @Column({ type: 'varchar', default: 'In Progress' })
+  @Column({ type: 'varchar' })
   status: 'In Progress' | 'Completed';
 
   @Column({ nullable: true })

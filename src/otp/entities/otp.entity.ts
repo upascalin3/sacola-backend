@@ -16,8 +16,8 @@ export class Otp {
   @ApiProperty({ description: 'The OTP code' })
   code: string;
 
-  @Column({ default: false })
-  @ApiProperty({ description: 'Whether the OTP has been used', default: false })
+  @Column()
+  @ApiProperty({ description: 'Whether the OTP has been used' })
   isUsed: boolean;
 
   @Column({ name: 'expires_at' })

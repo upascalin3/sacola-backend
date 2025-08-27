@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Between } from 'typeorm';
+import { Repository, Between, DeepPartial } from 'typeorm';
 import { WaterTank } from '../entities/water-tank.entity';
 import { CreateWaterTankDto } from '../dto/create-water-tank.dto';
 import { PaginationDto } from '../dto/pagination.dto';
@@ -13,8 +13,9 @@ export class WaterTankService {
   ) {}
 
   async create(createWaterTankDto: CreateWaterTankDto): Promise<WaterTank> {
-    const waterTank = this.waterTankRepository.create(createWaterTankDto);
-    return this.waterTankRepository.save(waterTank);
+    const partial = createWaterTankDto as unknown as DeepPartial<WaterTank>;
+    const waterTank: WaterTank = this.waterTankRepository.create(partial);
+    return this.waterTankRepository.save(waterTank as WaterTank);
   }
 
   async findAll(query: Partial<PaginationDto<WaterTank>>): Promise<PaginationDto<WaterTank>> {
@@ -24,14 +25,14 @@ export class WaterTankService {
       location, 
       startDate, 
       endDate 
-    } = query;
+    } = query as any;
     
     const skip = (page - 1) * limit;
     const where: any = {};
 
     if (location) where.location = location;
     if (startDate && endDate) {
-      where.dateDonated = Between(new Date(startDate), new Date(endDate));
+      where.dateDonated = Between(startDate, endDate);
     }
 
     const [items, total] = await this.waterTankRepository.findAndCount({

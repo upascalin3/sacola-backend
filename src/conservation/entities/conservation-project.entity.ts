@@ -27,11 +27,10 @@ export class ConservationProject {
   @ApiProperty({ description: 'Expected end date of the project', required: false })
   endDate?: Date;
 
-  @Column({ type: 'varchar', length: 50, default: 'planned' })
+  @Column({ type: 'varchar', length: 50 })
   @ApiProperty({ 
     description: 'Current status of the project',
-    enum: ['planned', 'in_progress', 'completed', 'on_hold', 'cancelled'],
-    default: 'planned'
+    enum: ['planned', 'in_progress', 'completed', 'on_hold', 'cancelled']
   })
   status: string;
 

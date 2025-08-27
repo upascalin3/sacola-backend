@@ -76,17 +76,11 @@ export class ConservationProjectService {
 
   async getStatistics() {
     const totalProjects = await this.conservationProjectRepository.count();
-    const activeProjects = await this.conservationProjectRepository.count({ 
-      where: { status: 'active' } 
-    });
-    const completedProjects = await this.conservationProjectRepository.count({ 
-      where: { status: 'completed' } 
-    });
 
+    // Let callers filter by status instead of hardcoding values here
+    // Optionally, you can add params to this method if needed
     return {
-      totalProjects,
-      activeProjects,
-      completedProjects,
+      totalProjects
     };
   }
 }

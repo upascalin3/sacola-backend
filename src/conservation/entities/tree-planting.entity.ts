@@ -19,9 +19,9 @@ export class TreePlanting {
   @ApiProperty({ description: 'Number of trees planted' })
   numberOfTrees: number;
 
-  @Column({ type: 'date' })
-  @ApiProperty({ description: 'Date when trees were planted' })
-  datePlanted: Date;
+  @Column({ type: 'varchar', length: 10 })
+  @ApiProperty({ description: 'Date when trees were planted (YYYY-MM-DD)' })
+  datePlanted: string;
 
   @Column({ nullable: true })
   @ApiProperty({ description: 'Description of the tree planting project', required: false })

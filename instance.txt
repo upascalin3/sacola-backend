@@ -215,3 +215,90 @@ datePlanted: `${data.datePlanted.getFullYear()}-${String(data.datePlanted.getMon
 datePlanted: data.datePlanted.toUTCString()
 
 // Test each format to see which one the backend accepts
+
+INTEGRATION GUIDE: DATE HANDLING
+--------------------------------
+
+Overview
+- The backend now accepts date inputs as ISO strings (recommended), timestamps, or Date objects (which serialize to ISO strings over HTTP). All DTOs transform these into Date and validate.
+- Most business dates are validated as not-in-the-future. Report date ranges accept any valid dates.
+
+Accepted formats
+- ISO Date (YYYY-MM-DD): "2024-01-15" (recommended for date-only fields)
+- ISO DateTime: "2024-01-15T00:00:00.000Z" (acceptable)
+- Unix timestamp (number): 1705276800000
+
+Common payload examples
+- Tree Planting (datePlanted)
+{
+  "treeType": "Acacia",
+  "location": "Sector A",
+  "numberOfTrees": 120,
+  "datePlanted": "2024-01-15", // or full ISO or timestamp
+  "description": "Community planting",
+  "targetBeneficiaries": 300,
+  "currentBeneficiaries": 120
+}
+
+- Bamboo Plantation (datePlanted)
+{
+  "distanceCovered": 2.4,
+  "location": "Zone 3",
+  "datePlanted": "2024-02-10",
+  "description": "Phase I"
+}
+
+- Water Tanks (dateDonated)
+{
+  "tankType": "10,000L",
+  "location": "Village X",
+  "numberOfTanks": 4,
+  "dateDonated": "2024-03-20",
+  "description": "Donated by partner",
+  "targetBeneficiaries": 500,
+  "currentBeneficiaries": 280
+}
+
+- Socio-Economic examples (dateBuilt/date/dateDonated)
+{
+  "officeName": "Field Office",
+  "location": "Block B",
+  "dateBuilt": "2023-11-05",
+  "description": "New site"
+}
+{
+  "materialType": "Roofing Sheets",
+  "location": "Hilltop",
+  "distributedMaterials": 120,
+  "dateDonated": "2024-04-01"
+}
+
+Report generation date range
+{
+  "projectCategory": "Conservation", // or "Socio-Economic"
+  "projectType": "tree-planting",
+  "reportType": "Custom", // Annual | Monthly | Custom
+  "dateRangeStart": "2024-01-01",
+  "dateRangeEnd": "2024-03-31"
+}
+
+Validation rules (summary)
+- All date fields must parse to a valid Date.
+- Most action dates cannot be in the future (e.g., datePlanted, dateDonated, dateBuilt).
+- Empty strings are treated as null for optional fields.
+- Invalid formats return 400 with a descriptive message.
+
+Frontend tips
+- Prefer sending date-only values in YYYY-MM-DD when you don’t need time.
+- If using <input type="date">, send the raw value (YYYY-MM-DD) or convert to Date and then to ISO.
+- Example conversion:
+const d = new Date(form.datePlanted);
+if (Number.isNaN(d.getTime())) throw new Error('Invalid date');
+const payload = { ...form, datePlanted: d.toISOString().split('T')[0] };
+
+Troubleshooting
+- If you see 400 errors about dates:
+  1) Log the outbound payload to confirm the exact date string/number.
+  2) Ensure the format is ISO (YYYY-MM-DD or full ISO) or a numeric timestamp.
+  3) Check the date is not in the future for business fields.
+  4) Remove empty strings for optional dates (send null/omit instead).

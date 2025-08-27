@@ -15,9 +15,9 @@ export class BambooPlantation {
   @ApiProperty({ description: 'Location of the bamboo plantation' })
   location: string;
 
-  @Column({ type: 'date' })
-  @ApiProperty({ description: 'Date when bamboo was planted' })
-  datePlanted: Date;
+  @Column({ type: 'varchar', length: 10 })
+  @ApiProperty({ description: 'Date when bamboo was planted (YYYY-MM-DD)' })
+  datePlanted: string;
 
   @Column({ nullable: true })
   @ApiProperty({ description: 'Description of the bamboo plantation project', required: false })

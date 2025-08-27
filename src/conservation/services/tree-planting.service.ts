@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Between } from 'typeorm';
+import { Repository, Between, DeepPartial } from 'typeorm';
 import { TreePlanting } from '../entities/tree-planting.entity';
 import { CreateTreePlantingDto } from '../dto/create-tree-planting.dto';
 import { PaginationDto } from '../dto/pagination.dto';
@@ -11,9 +11,10 @@ export class TreePlantingService {
     @InjectRepository(TreePlanting)
     private treePlantingRepository: Repository<TreePlanting>,
   ) {}
-
+  
   async create(createTreePlantingDto: CreateTreePlantingDto): Promise<TreePlanting> {
-    const treePlanting = this.treePlantingRepository.create(createTreePlantingDto);
+    const partial = createTreePlantingDto as unknown as DeepPartial<TreePlanting>;
+    const treePlanting: TreePlanting = this.treePlantingRepository.create(partial);
     return this.treePlantingRepository.save(treePlanting);
   }
 
@@ -24,14 +25,15 @@ export class TreePlantingService {
       location, 
       startDate, 
       endDate 
-    } = query;
+    } = query as any;
     
     const skip = (page - 1) * limit;
     const where: any = {};
 
     if (location) where.location = location;
     if (startDate && endDate) {
-      where.datePlanted = Between(new Date(startDate), new Date(endDate));
+      // startDate/endDate expected as YYYY-MM-DD strings; varchar comparison works lexicographically
+      where.datePlanted = Between(startDate, endDate);
     }
 
     const [items, total] = await this.treePlantingRepository.findAndCount({

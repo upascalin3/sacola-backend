@@ -15,23 +15,23 @@ export class LivestockEntryData {
   @ApiProperty({ description: 'Location' })
   location: string;
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'int' })
   @ApiProperty({ description: 'Number initially distributed' })
   distributedAnimals: number;
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'int' })
   @ApiProperty({ description: 'Number of deaths' })
   deaths: number;
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'int' })
   @ApiProperty({ description: 'Number sold' })
   soldAnimals: number;
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'int' })
   @ApiProperty({ description: 'Number transferred' })
   transferredAnimals: number;
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'int' })
   @ApiProperty({ description: 'Currently owned number' })
   currentlyOwned: number;
 

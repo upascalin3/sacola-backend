@@ -36,8 +36,7 @@ class ProjectActivityDto {
 
   @ApiProperty({ 
     description: 'Status of the activity',
-    enum: ['planned', 'in_progress', 'completed', 'delayed', 'cancelled'],
-    default: 'planned'
+    enum: ['planned', 'in_progress', 'completed', 'delayed', 'cancelled']
   })
   @IsString()
   @IsEnum(['planned', 'in_progress', 'completed', 'delayed', 'cancelled'])
@@ -79,8 +78,7 @@ export class CreateConservationProjectDto {
 
   @ApiProperty({ 
     description: 'Project status',
-    enum: ['planning', 'active', 'completed', 'on_hold', 'cancelled'],
-    default: 'planning'
+    enum: ['planning', 'active', 'completed', 'on_hold', 'cancelled']
   })
   @IsString()
   @IsEnum(['planning', 'active', 'completed', 'on_hold', 'cancelled'])

@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DeepPartial } from 'typeorm';
 import { EUFundedProject } from '../entities/eu-funded-project.entity';
 import { CreateEUFundedProjectDto } from '../dto/create-eu-funded-project.dto';
 import { UpdateEUFundedProjectDto } from '../dto/update-eu-project.dto';
@@ -14,8 +14,9 @@ export class EUFundedProjectService {
   ) {}
 
   async create(createEUFundedProjectDto: CreateEUFundedProjectDto): Promise<EUFundedProject> {
-    const euFundedProject = this.euFundedProjectRepository.create(createEUFundedProjectDto);
-    return this.euFundedProjectRepository.save(euFundedProject);
+    const partial = createEUFundedProjectDto as unknown as DeepPartial<EUFundedProject>;
+    const euFundedProject = this.euFundedProjectRepository.create(partial) as EUFundedProject;
+    return this.euFundedProjectRepository.save(euFundedProject as EUFundedProject);
   }
 
   async findAll(paginationDto: PaginationDto<EUFundedProject>) {
